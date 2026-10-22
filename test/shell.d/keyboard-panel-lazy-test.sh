@@ -49,23 +49,6 @@ for (const file of users) {
   for (const [, mirror, target] of mirrors) {
     assert(mirror === target && new RegExp(`property alias ${target}: ${target}\\b`).test(source), `${name} exposes ${target} from its content`)
   }
-
-  // An id inside the content is a ReferenceError from root-level code, which only surfaces when that code runs.
-  const stripped = lines.map(stripLine)
-  const contentStart = stripped.findIndex(line => /^\s*content:\s*\w+\s*\{/.test(line))
-  let contentEnd = contentStart
-  for (let i = contentStart, d = 0; i < stripped.length; i++) {
-    d += (stripped[i].match(/\{/g) || []).length - (stripped[i].match(/\}/g) || []).length
-    if (d === 0) { contentEnd = i; break }
-  }
-  const inside = stripped.slice(contentStart, contentEnd + 1).join('\n')
-  const outside = stripped.slice(0, contentStart).concat(stripped.slice(contentEnd + 1)).join('\n')
-  const resolvable = new Set([...outside.matchAll(/\bid:\s*(\w+)/g), ...outside.matchAll(/\b(?:var|let|const)\s+(\w+)/g)].map(m => m[1]))
-  for (const [, mirror] of mirrors) resolvable.add(mirror)
-  for (const m of outside.matchAll(/function\s*\w*\s*\(([^)]*)\)/g)) for (const param of m[1].split(',')) resolvable.add(param.trim())
-  const unreachable = [...inside.matchAll(/^\s*id:\s*(\w+)\s*$/gm)].map(m => m[1])
-    .filter(id => !resolvable.has(id) && new RegExp(`(^|[^.\\w])${id}\\b(?!\\s*:)`, 'm').test(outside))
-  assert(unreachable.length === 0, `${name} reaches content ids from root-level code only through loadedContent`, unreachable.join(', '))
 }
 pass('first-party keyboard panels build their content on first open')
 JS

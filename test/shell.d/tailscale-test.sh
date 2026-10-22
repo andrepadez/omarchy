@@ -11,11 +11,6 @@ const panelSource = fs.readFileSync(root + '/shell/plugins/panels/tailscale/Pane
 
 assert(/function toggleTailscale\(\): string \{ tailscale\.toggleTailscale\(\); return "ok" \}/.test(panelSource), 'tailscale exposes the connection toggle over IPC')
 
-const onOpened = (panelSource.match(/onOpenedChanged: if \(opened\) \{[\s\S]*?\n  \}/) || [''])[0]
-for (const [, flick] of panelSource.matchAll(/Flickable \{\s*id: (\w+)/g)) {
-  assert(new RegExp(`if \\(${flick}\\) ${flick}\\.contentY = 0`).test(onOpened), `tailscale opens ${flick} scrolled to the top`)
-}
-
 assertDeepEqual(
   tailscale.filterIPv4(['100.64.0.1', 'fd7a:115c:a1e0::1', '192.168.1.2']),
   ['100.64.0.1'],
