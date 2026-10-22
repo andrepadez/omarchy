@@ -21,6 +21,7 @@ Panel {
   readonly property Item mullvadSearch: panel.loadedContent ? panel.loadedContent.mullvadSearch : null
   readonly property Item mullvadRegionColumn: panel.loadedContent ? panel.loadedContent.mullvadRegionColumn : null
   readonly property Item peerColumn: panel.loadedContent ? panel.loadedContent.peerColumn : null
+  readonly property Item peerFlick: panel.loadedContent ? panel.loadedContent.peerFlick : null
 
   property string focusSection: "header"
   property int headerIndex: 0
@@ -439,6 +440,7 @@ Panel {
       property alias mullvadSearch: mullvadSearch
       property alias mullvadRegionColumn: mullvadRegionColumn
       property alias peerColumn: peerColumn
+      property alias peerFlick: peerFlick
       implicitHeight: column.implicitHeight
       anchors.fill: parent
       blocked: root.copyMenuOpen
