@@ -361,6 +361,7 @@ Panel {
   onOpenedChanged: if (opened) {
     cursorActive = false
     if (panelFlick) panelFlick.contentY = 0
+    if (peerFlick) peerFlick.contentY = 0
     tailscale.refresh()
     Qt.callLater(function() { if (panel.loadedContent) panel.loadedContent.forceActiveFocus() })
   }
